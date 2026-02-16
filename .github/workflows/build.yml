@@ -1,0 +1,90 @@
+name: Build Buildroot Image
+
+on:
+  push:
+    branches: [main, 'feature/*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            gcc \
+            g++ \
+            make \
+            cmake \
+            patch \
+            gzip \
+            bzip2 \
+            xz-utils \
+            perl \
+            cpio \
+            unzip \
+            rsync \
+            file \
+            bc \
+            git \
+            curl \
+            wget \
+            python3 \
+            python3-pip \
+            libncurses5-dev \
+            libssl-dev \
+            libelf-dev \
+            dosfstools \
+            mtools \
+            fdisk
+
+      - name: Cache Buildroot downloads
+        uses: actions/cache@v4
+        with:
+          path: buildroot-2025.02.10/dl
+          key: buildroot-dl-${{ hashFiles('configs/rpi5_tinkerlab_platform_defconfig') }}
+          restore-keys: |
+            buildroot-dl-
+
+      - name: Build
+        run: make build
+
+      - name: Upload SD card image
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: sdcard-image
+          path: buildroot-2025.02.10/output/images/sdcard.img*
+          if-no-files-found: warn
+
+      - name: Upload rootfs tarball
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: rootfs
+          path: buildroot-2025.02.10/output/images/rootfs.tar.gz
+          if-no-files-found: warn
+
+      - name: Package netboot artifacts
+        if: success()
+        run: |
+          tar czf netboot-bundle.tar.gz \
+            -C buildroot-2025.02.10/output/images/deploy \
+            boot/ setup-pi-netboot.sh
+
+      - name: Upload netboot bundle
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: netboot-bundle
+          path: netboot-bundle.tar.gz
+          if-no-files-found: warn
