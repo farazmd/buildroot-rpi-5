@@ -2,7 +2,7 @@ name: Build Buildroot Image
 
 on:
   push:
-    branches: [main, 'feature/*']
+    branches: [main, 'develop']
   pull_request:
     branches: [main]
   workflow_dispatch:
