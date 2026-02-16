@@ -26,6 +26,7 @@ BR2_TARGET_LOCALTIME="US/Central"
 # KERNEL
 # ══════════════════════════════════════════════════════════════════════
 BR2_LINUX_KERNEL=y
+BR2_KERNEL_HEADERS_AS_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="https://github.com/raspberrypi/linux/archive/refs/heads/rpi-6.12.y.tar.gz"
 BR2_LINUX_KERNEL_DEFCONFIG="bcm2712"
