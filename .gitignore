@@ -1,0 +1,4 @@
+output/
+deploy/
+*.tar.xz
+buildroot-*

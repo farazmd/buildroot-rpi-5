@@ -1,0 +1,77 @@
+# ══════════════════════════════════════════════════════════════════════
+# HARDWARE
+# ══════════════════════════════════════════════════════════════════════
+
+# 64-bit mode
+arm_64bit=1
+
+# Use Pi 5 defaults
+[pi5]
+
+[all]
+
+# ══════════════════════════════════════════════════════════════════════
+# BOOT
+# ══════════════════════════════════════════════════════════════════════
+
+# Kernel
+kernel=Image
+
+# Disable boot splash
+disable_splash=1
+
+# Boot delay 
+boot_delay=0
+
+# ══════════════════════════════════════════════════════════════════════
+# MEMORY
+# ══════════════════════════════════════════════════════════════════════
+
+gpu_mem=16
+
+# ══════════════════════════════════════════════════════════════════════
+# SERIAL CONSOLE
+# ══════════════════════════════════════════════════════════════════════
+
+# Enable UART for serial console
+enable_uart=1
+
+# Use miniuart for Bluetooth (frees primary UART for console)
+dtoverlay=miniuart-bt
+
+# ══════════════════════════════════════════════════════════════════════
+# POWER MANAGEMENT
+# ══════════════════════════════════════════════════════════════════════
+
+# Enable power button
+dtparam=pciex1
+dtparam=pciex1_gen=3
+
+# Enable fan control
+dtparam=fan_temp0=50000
+dtparam=fan_temp1=60000
+dtparam=fan_temp2=67500
+dtparam=fan_temp3=75000
+
+# ══════════════════════════════════════════════════════════════════════
+DISABLE UNUSED HARDWARE
+# ══════════════════════════════════════════════════════════════════════
+
+# Disable WiFi
+dtoverlay=disable-wifi
+
+# Disable Bluetooth
+dtoverlay=disable-bt
+
+# Disable HDMI
+# hdmi_blanking=2
+
+# ══════════════════════════════════════════════════════════════════════
+# PCIE / NVME
+# ══════════════════════════════════════════════════════════════════════
+
+# Enable PCIe
+dtparam=pciex1
+
+# Force Gen 3 speeds
+dtparam=pciex1_gen=3
