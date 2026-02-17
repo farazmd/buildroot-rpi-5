@@ -9,10 +9,10 @@ BR2_ARM_FPU_VFPV4=y
 # ══════════════════════════════════════════════════════════════════════
 # TOOLCHAIN
 # ══════════════════════════════════════════════════════════════════════
+BR2_TOOLCHAIN_EXTERNAL=y
+BR2_TOOLCHAIN_EXTERNAL_BOOTLIN=y
 BR2_TOOLCHAIN_EXTERNAL_BOOTLIN_AARCH64_GLIBC_STABLE=y
 BR2_TOOLCHAIN_BUILDROOT_CXX=y
-BR2_TOOLCHAIN_BUILDROOT_GLIBC=y
-BR2_TOOLCHAIN_HEADERS_AT_LEAST_6_12=y
 
 # ══════════════════════════════════════════════════════════════════════
 # SYSTEM
@@ -29,6 +29,7 @@ BR2_TARGET_LOCALTIME="US/Central"
 # ══════════════════════════════════════════════════════════════════════
 BR2_LINUX_KERNEL=y
 BR2_KERNEL_HEADERS_AS_KERNEL=y
+BR2_KERNEL_HEADERS_6_12=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="https://github.com/raspberrypi/linux/archive/refs/heads/rpi-6.12.y.tar.gz"
 BR2_LINUX_KERNEL_DEFCONFIG="bcm2712"
