@@ -58,68 +58,6 @@ cp "${BINARIES_DIR}/rootfs.tar.gz" "${OUTPUT_DIR}/"
 cp "${BINARIES_DIR}/Image" "${OUTPUT_DIR}/kernel8.img"
 cp -r "${BOOT_DIR}" "${OUTPUT_DIR}/boot"
 
-
-echo ""
-echo "📦 Creating setup script..."
-
-cat > "${DEPLOY_DIR}/setup-pi-netboot.sh" << 'SCRIPT'
-#!/bin/bash
-# Auto-generated setup script for Raspberry Pi network boot
-set -e
-
-PI_SERIAL="$1"
-NFS_SERVER="${2:-$(hostname -I | awk '{print $1}')}"
-TFTP_ROOT="${TFTP_ROOT:-/srv/tftp}"
-NFS_ROOT="${NFS_ROOT:-/srv/nfs/rpi}"
-
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-NETBOOT_DIR="${SCRIPT_DIR}/netboot"
-
-if [ -z "$PI_SERIAL" ]; then
-    echo "Usage: $0 <pi-serial> [nfs-server-ip]"
-    echo ""
-    echo "Example: $0 abcd1234 192.168.1.5"
-    exit 1
-fi
-
-echo "Setting up network boot for Pi: ${PI_SERIAL}"
-echo "NFS Server: ${NFS_SERVER}"
-
-# Create TFTP directory
-PI_TFTP="${TFTP_ROOT}/${PI_SERIAL}"
-mkdir -p "${PI_TFTP}"
-
-# Copy boot files
-cp -r ${NETBOOT_DIR}/boot/* "${PI_TFTP}/"
-
-# Generate cmdline.txt with actual values
-sed "s/__SERIAL__/${PI_SERIAL}/g; s/__NFS_SERVER__/${NFS_SERVER}/g" \
-    "${NETBOOT_DIR}/boot/cmdline-netboot.txt.tmpl" > "${PI_TFTP}/cmdline.txt"
-
-# Create NFS directory
-PI_NFS="${NFS_ROOT}/${PI_SERIAL}"
-mkdir -p "${PI_NFS}"
-
-# Extract rootfs
-echo "Extracting rootfs (this may take a moment)..."
-tar xzf "${NETBOOT_DIR}/rootfs/rootfs.tar.gz" -C "${PI_NFS}"
-
-# Update NFS exports
-if ! grep -q "${PI_NFS}" /etc/exports 2>/dev/null; then
-    echo "${PI_NFS} *(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
-    exportfs -ra
-fi
-
-echo ""
-echo "Setup complete!"
-echo "   TFTP: ${PI_TFTP}"
-echo "   NFS:  ${PI_NFS}"
-echo ""
-echo "Power on the Pi to network boot."
-SCRIPT
-
-chmod +x "${DEPLOY_DIR}/setup-pi-netboot.sh"
-
 echo "═══════════════════════════════════════════════════════════════"
 echo "Build complete! Output files:"
 echo "═══════════════════════════════════════════════════════════════"
